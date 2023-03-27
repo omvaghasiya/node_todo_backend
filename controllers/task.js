@@ -38,13 +38,15 @@ export const getMyTask = async (req, res, next) => {
 export const updateTask = async (req, res, next) => {
   //   const { id } = req.params;
   try {
-    const userid = req.user._id;
+    const task = await Task.findById(req.params.id);
 
-    const tasks = await Task.find({ user: userid });
+    task.isCompleted = !task.isCompleted;
+
+    await task.save();
 
     res.status(200).json({
       success: true,
-      tasks,
+      message:"Task Updated!",
     });
   } catch (error) {
     next(error);
@@ -61,7 +63,7 @@ export const deleteTask = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "Task deleted",
+      message: "Task Deleted",
     });
   } catch (error) {
     next(error);
